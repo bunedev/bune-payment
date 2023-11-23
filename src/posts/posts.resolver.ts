@@ -1,6 +1,13 @@
-import { Resolver, Query, Args, ResolveReference } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  ResolveReference,
+  Mutation,
+} from '@nestjs/graphql';
 import { Post } from './post.entity';
 import { PostsService } from './posts.service';
+import { CreatePostInput } from './base/input/CreatePostInput';
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -9,6 +16,11 @@ export class PostsResolver {
   @Query(() => Post)
   async getPost(@Args('id') id: string): Promise<Post> {
     return await this.postsService.findById(id);
+  }
+
+  @Mutation(() => Post)
+  async createPost(@Args() createPostData: CreatePostInput): Promise<Post> {
+    return await this.postsService.createPost(createPostData);
   }
 
   @ResolveReference()

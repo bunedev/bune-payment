@@ -3,6 +3,7 @@ import { Post } from './post.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createGraphQLError } from 'src/utils/graphql-errors.util';
 import { ErrorCodes, ErrorMessages } from 'src/common/constants/errors';
+import { CreatePostInput } from './base/input/CreatePostInput';
 
 @Injectable()
 export class PostsService {
@@ -16,5 +17,11 @@ export class PostsService {
       );
     }
     return post;
+  }
+
+  async createPost(data: CreatePostInput): Promise<Post> {
+    return await this.prisma.post.create({
+      data,
+    });
   }
 }
