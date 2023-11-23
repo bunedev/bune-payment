@@ -7,5 +7,5 @@ export class Post {
   id: string;
 
   @Field()
-  title: string;
+  title!: string;
 }

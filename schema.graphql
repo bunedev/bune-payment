@@ -6,3 +6,4 @@ type Post @key(fields: "id") {
 extend type Query {
   getPost(id: ID!): Post
 }
+

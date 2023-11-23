@@ -2,11 +2,10 @@ import { Catch, ArgumentsHost, Logger } from '@nestjs/common';
 import { GqlArgumentsHost, GqlExceptionFilter } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import * as path from 'path';
-import { appendFile } from "node:fs/promises";
+import { appendFile } from 'node:fs/promises';
 
 @Catch()
 export class GqlAllExceptionsFilter implements GqlExceptionFilter {
-
   private readonly logger = new Logger(GqlAllExceptionsFilter.name);
   private logFilePath = path.join(__dirname, '../../../logs/error.log'); // Adjust the path as needed
 
@@ -27,14 +26,13 @@ export class GqlAllExceptionsFilter implements GqlExceptionFilter {
     let stacktrace = [];
 
     if (exception instanceof GraphQLError) {
-      console.log('exception.extensions', exception.extensions)
       message = exception.message;
-      code = exception.extensions?.code || 'INTERNAL_SERVER_ERROR' as any;
+      code = exception.extensions?.code || ('INTERNAL_SERVER_ERROR' as any);
       stacktrace = exception.stack?.split('\n') || [];
-      status = exception.extensions?.status || 500 as any;
+      status = exception.extensions?.status || (500 as any);
       messageCode = exception.extensions?.messageCode as any;
     } else if (exception instanceof Error) {
-      status = 'status' in exception ? exception['status'] : 500 as any;
+      status = 'status' in exception ? exception['status'] : (500 as any);
       message = exception.message;
       stacktrace = exception.stack?.split('\n') || [];
     } else {
@@ -71,9 +69,9 @@ export class GqlAllExceptionsFilter implements GqlExceptionFilter {
       // Perhaps re-throwing the exception or handling it in another way
     }
 
-     // After determining the error details
-     const logOutput = `Error: ${message} Code: ${code} Status: ${status} messageCode: ${messageCode} stacktrace: ${stacktrace}`;
-     this.logger.error(logOutput); // Logs to the console
-     this.logToFile(logOutput); // Logs to the file
+    // After determining the error details
+    const logOutput = `Error: ${message} Code: ${code} Status: ${status} messageCode: ${messageCode} stacktrace: ${stacktrace}`;
+    this.logger.error(logOutput); // Logs to the console
+    this.logToFile(logOutput); // Logs to the file
   }
 }
