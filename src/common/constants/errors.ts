@@ -1,11 +1,13 @@
 // Enum for Error Codes
 export enum ErrorCodes {
-  PaymentNotFound = 1000,
+  PaymentNotFound = 100000,
+  UpdateFailed = 100001,
   // ... other error codes
 }
 
 // Object for Error Messages
 export const ErrorMessages = {
-  PaymentNotFound: 'Post does not exist!',
+  PaymentNotFound: 'Payment does not exist!',
+  UpdateFailed: 'Update Failed!',
   // ... other error messages
 };

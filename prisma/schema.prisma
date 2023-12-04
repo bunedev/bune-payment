@@ -16,17 +16,47 @@ model Payment {
   amount    Float   // amount payment
   time      DateTime // time payment
   method   String
-  status    String
+  status    PaymentStatus? @default(PENDING)
   transactionId String?
   orderId String?
   description String?
-  currency String // usd, vnd
-  refundStatus String?
+  currency PaymentCurrency? @default(USD)
+  refundStatus RefundStatus? 
   gateway String? // gateway payment ex( paypal, stripe)
   receipt String? // path to payment receipt
-  type String // payment type (pay for orders, top up your account, etc.)
+  type PaymentType? @default(OTHER) // payment type (pay for orders, top up your account, etc.)
   fees Float?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum RefundStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+  CANCELED
+  PROCESSING
+  EXPIRED
+  HOLD
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentType {
+  PAY_FOR_ORDERS
+  TOP_UP_ACCOUNT
+  OTHER
+}
+
+enum PaymentCurrency {
+  USD
+  VND
 }

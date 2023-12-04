@@ -1,6 +1,5 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
 import {
-  IsNotEmpty,
   IsString,
   IsNumber,
   IsDate,
@@ -9,43 +8,49 @@ import {
 } from 'class-validator';
 
 @InputType()
-class CreatePaymentInput {
-  @Field()
-  @IsNotEmpty({ message: 'User ID is required' })
-  userId: string;
+class PaymentUpdateInput {
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString({ message: 'User ID must be a string' })
+  userId?: string;
 
-  @Field(() => Number)
-  @IsNotEmpty({ message: 'Amount is required' })
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
   @IsNumber({}, { message: 'Amount must be a number' })
-  amount: number;
+  amount?: number;
 
-  @Field()
-  @IsNotEmpty({ message: 'Time is required' })
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
   @IsDate({ message: 'Time must be a valid date' })
-  time: Date;
-
-  @Field()
-  @IsNotEmpty({ message: 'Method is required' })
-  @IsString({ message: 'Method must be a string' })
-  method: string;
+  time?: Date;
 
   @Field({ nullable: true })
+  @IsOptional()
+  @IsString({ message: 'Method must be a string' })
+  method?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString({ message: 'Status must be a string' })
+  status?: string;
+
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString({ message: 'Transaction ID must be a string' })
   transactionId?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString({ message: 'Order ID must be a string' })
   orderId?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString({ message: 'Description must be a string' })
   description?: string;
 
-  @Field()
-  @IsNotEmpty({ message: 'Currency is required' })
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString({ message: 'Currency must be a string' })
   @IsCurrency(undefined, { message: 'Currency must be a valid currency code' })
   currency?: string;
@@ -60,13 +65,13 @@ class CreatePaymentInput {
   @IsString({ message: 'Gateway must be a string' })
   gateway?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @IsString({ message: 'Receipt must be a string' })
   receipt?: string;
 
-  @Field()
-  @IsNotEmpty({ message: 'Type is required' })
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsString({ message: 'Type must be a string' })
   type?: string;
 
@@ -76,4 +81,4 @@ class CreatePaymentInput {
   fees?: number;
 }
 
-export { CreatePaymentInput as CreatePaymentInput };
+export { PaymentUpdateInput as PaymentUpdateInput };

@@ -1,7 +1,13 @@
-import { Directive, Field, ID, ObjectType } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { EnumPaymentStatus } from './base/enums/EnumPaymentStatus';
+import {
+  EnumPaymentCurency,
+  EnumPaymentCurrency,
+} from './base/enums/EnumPaymentCurrency';
+import { EnumPaymentRefundStatus } from './base/enums/EnumPaymentRefundStatus';
+import { EnumPaymentType } from './base/enums/EnumPaymentType';
 
 @ObjectType()
-@Directive('@key(fields: "id")')
 export class Payment {
   @Field(() => ID)
   id: string;
@@ -19,7 +25,7 @@ export class Payment {
   method: string;
 
   @Field()
-  status: string;
+  status: EnumPaymentStatus;
 
   @Field({ nullable: true })
   transactionId?: string;
@@ -31,10 +37,10 @@ export class Payment {
   description?: string;
 
   @Field()
-  currency: string;
+  currency: EnumPaymentCurrency;
 
   @Field({ nullable: true })
-  refundStatus?: string;
+  refundStatus?: EnumPaymentRefundStatus;
 
   @Field({ nullable: true })
   gateway?: string;
@@ -43,7 +49,7 @@ export class Payment {
   receipt?: string;
 
   @Field()
-  type: string;
+  type: EnumPaymentType;
 
   @Field(() => Number, { nullable: true })
   fees?: number;
