@@ -1,9 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { EnumPaymentStatus } from './base/enums/EnumPaymentStatus';
-import {
-  EnumPaymentCurency,
-  EnumPaymentCurrency,
-} from './base/enums/EnumPaymentCurrency';
+import { EnumPaymentCurrency } from './base/enums/EnumPaymentCurrency';
 import { EnumPaymentRefundStatus } from './base/enums/EnumPaymentRefundStatus';
 import { EnumPaymentType } from './base/enums/EnumPaymentType';
 
