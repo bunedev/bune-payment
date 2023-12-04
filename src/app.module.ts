@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PostsModule } from './posts/posts.module';
+import { PostsModule } from './base/base.module';
 import { PrismaModule } from './prisma/prisma.module';
 import {
   ApolloFederationDriver,

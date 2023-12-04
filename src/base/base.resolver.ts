@@ -6,7 +6,7 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { Post } from './post.entity';
-import { PostsService } from './posts.service';
+import { PostsService } from './base.service';
 import { CreatePostInput } from './base/input/CreatePostInput';
 
 @Resolver(() => Post)
