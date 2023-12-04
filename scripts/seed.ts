@@ -10,12 +10,6 @@ async function seed() {
 
   const client = new PrismaClient();
 
-  await client.post.create({
-    data: {
-      title: 'admin',
-    },
-  });
-
   void client.$disconnect();
 
   console.info('Seeding database with custom seed...');

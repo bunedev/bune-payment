@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PostsModule } from './base/base.module';
+import { PaymentModule } from './payments/payment.module';
 import { PrismaModule } from './prisma/prisma.module';
 import {
   ApolloFederationDriver,
@@ -9,7 +9,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 @Module({
   imports: [
-    PostsModule,
+    PaymentModule,
     PrismaModule,
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,

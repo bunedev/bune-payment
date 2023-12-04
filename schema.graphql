@@ -1,9 +1,25 @@
-type Post @key(fields: "id") {
+type Payment @key(fields: "id") {
   id: ID!
-  title: String!
+  userId: String!
+  amount: Float!
+  time: DateTime!
+  method: String!
+  status: String!
+  transactionId: String
+  orderId: String
+  description: String
+  currency: String!
+  refundStatus: String
+  gateway: String
+  receipt: String
+  type: String!
+  fees: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
+
 extend type Query {
-  getPost(id: ID!): Post
+  getPayment(id: ID!): Payment
 }
 
