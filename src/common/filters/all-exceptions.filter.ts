@@ -1,23 +1,39 @@
+import { existsSync, mkdirSync, appendFile } from 'fs';
+import { promisify } from 'util';
+import * as path from 'path';
 import { Catch, ArgumentsHost, Logger } from '@nestjs/common';
 import { GqlArgumentsHost, GqlExceptionFilter } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
-import * as path from 'path';
-import { appendFile } from 'node:fs/promises';
+
+const mkdir = promisify(mkdirSync);
+const append = promisify(appendFile);
 
 @Catch()
 export class GqlAllExceptionsFilter implements GqlExceptionFilter {
   private readonly logger = new Logger(GqlAllExceptionsFilter.name);
-  private logFilePath = path.join(__dirname, '../../../logs/error.log'); // Adjust the path as needed
+  private logFilePath = path.join(__dirname, '../../../logs/error.log');
 
   private async logToFile(message: string) {
     const logMessage = `${new Date().toISOString()} - ${message}\n`;
-    await appendFile(this.logFilePath, logMessage);
+
+    // Check if the log file exists, and create it if it doesn't
+    if (!existsSync(this.logFilePath)) {
+      const logsDirectory = path.dirname(this.logFilePath);
+
+      try {
+        mkdir(logsDirectory, { recursive: true });
+      } catch (error) {
+        console.error(`Failed to create logs directory: ${error}`);
+      }
+    }
+
+    await append(this.logFilePath, logMessage);
   }
 
   catch(exception: unknown, host: ArgumentsHost) {
     const gqlHost = GqlArgumentsHost.create(host);
     const context = gqlHost.getContext();
-    const response = context?.res; // context may not include the response
+    const response = context?.res;
 
     let status = 500;
     let message = 'Internal Server Error';
@@ -36,12 +52,10 @@ export class GqlAllExceptionsFilter implements GqlExceptionFilter {
       message = exception.message;
       stacktrace = exception.stack?.split('\n') || [];
     } else {
-      // For unexpected or unhandled errors, log the full error
       this.logger.error('Unexpected error', exception);
     }
 
     if (response) {
-      // Send the JSON error response as expected in GraphQL
       response.status(status).json({
         errors: [
           {
@@ -56,7 +70,6 @@ export class GqlAllExceptionsFilter implements GqlExceptionFilter {
         data: null,
       });
     } else {
-      // If response is not available, log the error details
       this.logger.error('HTTP response object is undefined', {
         status,
         message,
@@ -65,13 +78,10 @@ export class GqlAllExceptionsFilter implements GqlExceptionFilter {
         stacktrace,
         exception,
       });
-      // Here you should decide how to handle the lack of a response object
-      // Perhaps re-throwing the exception or handling it in another way
     }
 
-    // After determining the error details
     const logOutput = `Error: ${message} Code: ${code} Status: ${status} messageCode: ${messageCode} stacktrace: ${stacktrace}`;
-    this.logger.error(logOutput); // Logs to the console
-    this.logToFile(logOutput); // Logs to the file
+    this.logger.error(logOutput);
+    this.logToFile(logOutput);
   }
 }

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PaymentResolver } from './payments/payment.resolver';
+import { PaypalModule } from './paypal/paypal.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PaymentResolver } from './payments/payment.resolver';
         federation: 2,
       },
     }),
+    PaypalModule,
   ],
   providers: [PaymentResolver],
 })
