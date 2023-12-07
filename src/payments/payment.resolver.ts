@@ -10,8 +10,9 @@ import { PaymentService } from './payment.service';
 import { CreatePaymentArgs } from './base/args/CreatePaymentArgs';
 import { PaymentFindUniqueArgs } from './base/args/PaymentFindUniqueArgs';
 import { DeletePaymentArgs } from './base/args/DeletePaymentArgs';
-import { createGraphQLError } from 'src/utils/graphql-errors.util';
 import { UpdatePaymentArgs } from './base/args/UpdatePaymentArgs';
+import { createGraphQLError } from 'bune-common';
+import { HttpStatus } from '@nestjs/common';
 
 @Resolver(() => Payment)
 export class PaymentResolver {
@@ -36,7 +37,11 @@ export class PaymentResolver {
     try {
       return await this.paymentService.update(args);
     } catch (error) {
-      throw createGraphQLError(error.message, error.messageCode || 400);
+      throw createGraphQLError(
+        error.status || HttpStatus.BAD_REQUEST,
+        error.message,
+        error.messageCode,
+      );
     }
   }
 
@@ -47,7 +52,11 @@ export class PaymentResolver {
     try {
       return await this.paymentService.delete(args);
     } catch (error) {
-      throw createGraphQLError(error.message, error.messageCode || 400);
+      throw createGraphQLError(
+        error.status || HttpStatus.BAD_REQUEST,
+        error.message,
+        error.messageCode,
+      );
     }
   }
 

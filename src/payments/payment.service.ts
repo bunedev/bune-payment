@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { Payment } from './payment.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { createGraphQLError } from 'src/utils/graphql-errors.util';
 import { ErrorCodes, ErrorMessages } from 'src/common/constants/errors';
 import { CreatePaymentArgs } from './base/args/CreatePaymentArgs';
 import { PaymentFindUniqueArgs } from './base/args/PaymentFindUniqueArgs';
 import { DeletePaymentArgs } from './base/args/DeletePaymentArgs';
 import { UpdatePaymentArgs } from './base/args/UpdatePaymentArgs';
 import { isRecordNotFoundError } from 'src/prisma/prisma.util';
+import { createGraphQLError } from 'bune-common';
 
 @Injectable()
 export class PaymentService {
@@ -46,11 +46,13 @@ export class PaymentService {
     } catch (error) {
       if (isRecordNotFoundError(error)) {
         throw createGraphQLError(
+          HttpStatus.BAD_REQUEST,
           `No resource was found for ${JSON.stringify(args.where)}`,
           ErrorCodes.PaymentNotFound,
         );
       }
       throw createGraphQLError(
+        HttpStatus.BAD_REQUEST,
         ErrorMessages.UpdateFailed,
         ErrorCodes.UpdateFailed,
       );
@@ -69,6 +71,7 @@ export class PaymentService {
       return this.prisma.payment.delete(args);
     } catch (error) {
       throw createGraphQLError(
+        HttpStatus.BAD_REQUEST,
         ErrorMessages.PaymentNotFound,
         ErrorCodes.PaymentNotFound,
       );
@@ -96,6 +99,7 @@ export class PaymentService {
     const payment = await this.prisma.payment.findUnique({ where: { id } });
     if (!payment) {
       throw createGraphQLError(
+        HttpStatus.BAD_REQUEST,
         ErrorMessages.PaymentNotFound,
         ErrorCodes.PaymentNotFound,
       );
